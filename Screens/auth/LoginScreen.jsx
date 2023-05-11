@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState} from "react";
 import {
   StyleSheet,
   TextInput,
@@ -11,80 +11,96 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import * as Font from 'expo-font';
-import { AppLoading } from 'expo';
+
+import { useDispatch } from "react-redux";
+
+import { authSignInUser } from "../../redux/auth/authOperations";
+
 
 const initialState = {
-  email: '',
-  password: ','
+  email: "",
+  password: "",
 };
 
-const loadApplication = async () => {
-    await Font.loadAsync({
-        'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf')
-    })
-}
-export default function App  ()  {
+const LoginScreen = ({ navigation }) => {
+  // console.log(Platform.OS);
+  // console.log(navigation,"navigation");
+
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-    const [state, setState] = useState(initialState);
-    const [isReady, setIsReady] = useState(false);
-    
-    const keyboardHide = () => {
-        setIsShowKeyboard(false);
-        Keyboard.dismiss();
-        setState(initialState);
-    };
+  const [state, setState] = useState(initialState);
+  const [isFocusInput, setIsFocusInput] = useState({
+    email: false,
+    password: false,
+  });
+  const [isShowPassword, setIsShowPassword] = useState(true);
 
-    if (!isReady) {
-        return <AppLoading
-            startAsync={loadApplication}
-            onFinish={() => setIsReady(true)}
-            onError={console.warn} />
-    };
+  const dispatch = useDispatch();
 
- 
+  const handleSubmit = () => {
+    dispatch(authSignInUser(state));
+
+    navigation.navigate("Home");
+    setState(initialState);
+  };
+
   return (
-      <TouchableWithoutFeedback onPress={keyboardHide} >
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
       <View style={styles.container}>
-        <ImageBackground source={require('./assets/images/Photo BG.jpg')}
-          style={styles.image}>
+        <ImageBackground
+          source={require("../../assets/images/Photo BG-2.jpg")}
+          style={styles.image}
+        >
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <View >
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
               <View
                 style={{
                   ...styles.formWrapper,
+
                   ...Platform.select({
+                    ios: {
+                      marginTop: isShowKeyboard ? 456 : 0,
+                    },
                     android: {
                       marginTop: isShowKeyboard ? -50 : 0,
-                    }
-                  })
+                    },
+                  }),
                 }}
               >
-                <Text style={{
-                  ...styles.title,
-                  marginTop: isShowKeyboard ? 32 : 0,
-                }}
+                <Text
+                  style={{
+                    ...styles.title,
+                    marginTop: isShowKeyboard ? 24 : 0,
+                  }}
                 >
-                  Вхід
+                  Войти
                 </Text>
-                <View style={{
-                  ...styles.form,
-                  paddingBottom: isShowKeyboard? 32 : 100,
-                }}
+
+                <View
+                  style={{
+                    ...styles.form,
+                    paddingBottom: isShowKeyboard ? 32 : 111,
+                  }}
                 >
                   <View style={styles.inputMail}>
-                    <TextInput style={{
-                      ...styles.input,
-                      borderColor: email ? '#FF6C00' : '#F6F6F6',
-                      backgroundColor:email ? '#FFFFFF' : '#212121',
-                    }}
-                      textAlign={'left'}
-                      placeholderTextColor={'#BDBDBD'}
-                      keyboardType='email-address'
+                    <TextInput
+                      style={{
+                        ...styles.input,
+                        borderColor: isFocusInput.email ? "#FF6C00" : "#F6F6F6",
+                        backgroundColor: isFocusInput.email
+                          ? "#FFFFFF"
+                          : "#F6F6F6",
+                      }}
+                      textAlign={"left"}
+                      placeholderTextColor={"#BDBDBD"}
+                      keyboardType="email-address"
                       textContentType="email"
                       value={state.email}
-                      placeholder='Введіть електронну пошту'
+                      placeholder="Адрес электронной почты"
                       onFocus={() => {
                         setIsShowKeyboard(true),
                           setIsFocusInput({
@@ -101,24 +117,29 @@ export default function App  ()  {
                       onChangeText={(value) =>
                         setState((prevState) => ({
                           ...prevState,
-                          email:value,
+                          email: value,
                         }))
                       }
                     />
                   </View>
+
                   <View style={styles.inputPassword}>
                     <TextInput
                       style={{
                         ...styles.input,
-                        borderColor: isFocusInput.password ? '#FF6C00' : '#F6F6F6',
-                        backgroundColor: isFocusInput.password ? '#FFFFFF' : '#212121',
+                        borderColor: isFocusInput.password
+                          ? "#FF6C00"
+                          : "#F6F6F6",
+                        backgroundColor: isFocusInput.password
+                          ? "#FFFFFF"
+                          : "#F6F6F6",
                       }}
-                      textAlign={'left'}
-                      placeholderTextColor={'#BDBDBD'}
+                      textAlign={"left"}
+                      placeholderTextColor={"#BDBDBD"}
                       textContentType="password"
                       value={state.password}
                       secureTextEntry={isShowPassword}
-                      placeholder='Пароль'
+                      placeholder="Пароль"
                       onFocus={() => {
                         setIsShowKeyboard(true),
                           setIsFocusInput({
@@ -139,37 +160,38 @@ export default function App  ()  {
                         }))
                       }
                     />
-                    <Text style={styles.showPass}
+                    <Text
+                      style={styles.showPass}
                       onPress={() => {
-                      setIsShowPassword((prevState)=>!prevState)
-                    }}
+                        setIsShowPassword((prevState) => !prevState);
+                      }}
                     >
-                      {isShowPassword ? 'Показати' : 'Приховати'}
+                      {isShowPassword ? "Показать" : "Скрыть"}
                     </Text>
                   </View>
-                  <TouchableOpacity style={styles.button}
-                    activeOpacity={0.8}
-                    onPress={handleSubmit}>
-                    <Text style={styles.buttontext}>
-                      Увійти
-                    </Text>
-                  </TouchableOpacity >
                   <TouchableOpacity
-                    onPress={() => navigation.navigate("Registration")}>
+                    style={styles.button}
+                    activeOpacity={0.8}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={styles.buttonText}>Войти</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Registration")}
+                  >
                     <Text style={styles.aside}>
-                      Немає акаунту? Зареєструйся
+                      Нет аккаунта? Зарегистрироваться
                     </Text>
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
-  )
+  );
 };
-
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -177,8 +199,8 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'flex-end',
+    resizeMode: "cover",
+    justifyContent: "flex-end",
   },
   formWrapper: {
     paddingTop: 32,
