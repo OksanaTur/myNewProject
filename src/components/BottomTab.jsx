@@ -8,7 +8,7 @@ import ProfileScreen from '../Screens/ProfileScreen';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { FontAwesome5, AntDesign, Ionicons, Feather } from '@expo/vector-icons';
+import { AntDesign, Ionicons, Feather } from '@expo/vector-icons';
 
 
 const BottomTab = createBottomTabNavigator();

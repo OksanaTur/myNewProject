@@ -11,9 +11,9 @@ import ProfileScreen from './src/Screens/ProfileScreen';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    RobotoBold: require('./src/fonts/Roboto-Bold.ttf'), // Завантаження шрифту Roboto-Bold
-    RobotoRegular: require('./src/fonts/Roboto-Regular.ttf'), // Завантаження шрифту Roboto-Regular
-    RobotoMedium: require('./src/fonts/Roboto-Medium.ttf'), // Завантаження шрифту Roboto-Medium
+    'Roboto-Bold': require('./src/fonts/Roboto-Bold.ttf'), // Завантаження шрифту Roboto-Bold
+    'Roboto-Regular': require('./src/fonts/Roboto-Regular.ttf'), // Завантаження шрифту Roboto-Regular
+    'Roboto-Medium': require('./src/fonts/Roboto-Medium.ttf'), // Завантаження шрифту Roboto-Medium
   });
 
   if (!fontsLoaded) {
